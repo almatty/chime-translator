@@ -1,0 +1,21 @@
+{
+  "name": "chime-translator",
+  "version": "1.0.0",
+  "description": "Translation utility for Instant Chime, utilizes google translate to transform the JSON files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Quinlan",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/translate": "^0.7.0",
+    "chalk": "^1.1.3",
+    "clear": "0.0.1",
+    "clui": "^0.3.1",
+    "figlet": "^1.2.0",
+    "flat": "^2.0.1",
+    "inquirer": "^3.0.6",
+    "lodash": "^4.17.4"
+  }
+}
