@@ -4,7 +4,7 @@ let chalk = require('chalk');
 let _ = require('lodash');
 let fs = require('fs');
 let config = require('./config');
-let flatten = require('flat')
+let flatten = require('flat');
 let unflatten = require('flat').unflatten;
 
 const translateClient = require('@google-cloud/translate')({
@@ -24,6 +24,7 @@ const logger = {
 function ChimeTranslator() {
     let targetLanguage = '';
     let translatedResource = {};
+    let deepTranslatedResource = {};
     let tempObj = {};
     let resource = {};
     let variableDictionary = {};
@@ -71,7 +72,7 @@ function ChimeTranslator() {
         let translatedSize = _.size(translatedResource);
         let failedSize = _.size(failedTranslations);
         logger.log(chalk.yellow(`Original resource size: ${originalSize}. Translated resource size: ${translatedSize}`));
-        logger.log(chalk.bgRed(`${failedSize} translations failed. Please review the locale-${targetLanguage}-failed.json file for failed translations`));
+        logger.log(chalk.red(`${failedSize} translations failed. Please review the locale-${targetLanguage}-failed.json file for failed translations`));
 
         writeFile();
         writeDebug();
@@ -92,8 +93,8 @@ function ChimeTranslator() {
         let pairArr = _.toPairs(translatedResource);
         let sortedPairs = _.sortBy(pairArr, o => o[0]);
         translatedResource = _.fromPairs(sortedPairs);
-        let deepTranslatedResource = unflatten(translatedResource);
-        fs.writeFile(`${config.dist}/locale-${targetLanguage}-deep.json`, JSON.stringify(deepTranslatedResource, null, 2))
+        deepTranslatedResource = unflatten(translatedResource);
+        // fs.writeFile(`${config.dist}/locale-${targetLanguage}-deep.json`, JSON.stringify(deepTranslatedResource, null, 2))
     }
 
 
@@ -136,7 +137,7 @@ function ChimeTranslator() {
         logger.log(chalk.green('Writing translated resource file'));
         let outputFilePath = `${config.dist}/locale-${targetLanguage}.json`;
 
-        fs.writeFile(outputFilePath, JSON.stringify(translatedResource, null, 2), err => {
+        fs.writeFile(outputFilePath, JSON.stringify(deepTranslatedResource, null, 2), err => {
             err ?
                 logger.log(chalk.red(`Error writing translated resource file`), err) :
                 logger.log(chalk.green(`Translated resource file saved to ${outputFilePath}`))
